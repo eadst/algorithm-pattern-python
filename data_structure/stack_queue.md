@@ -594,3 +594,7 @@ class Solution:
 - [ ] [largest-rectangle-in-histogram](https://leetcode-cn.com/problems/largest-rectangle-in-histogram/)
 - [ ] [implement-queue-using-stacks](https://leetcode-cn.com/problems/implement-queue-using-stacks/)
 - [ ] [01-matrix](https://leetcode-cn.com/problems/01-matrix/)
+- [ ] [largest-rectangle-in-histogram](https://leetcode-cn.com/problems/largest-rectangle-in-histogram/)
+- [ ] [trapping-rain-water](https://leetcode-cn.com/problems/trapping-rain-water/)
+- [ ] [sliding-window-maximum](https://leetcode-cn.com/problems/sliding-window-maximum/)
+- [ ] [shortest-subarray-with-sum-at-least-k](https://leetcode-cn.com/problems/shortest-subarray-with-sum-at-least-k/)
