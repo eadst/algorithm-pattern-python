@@ -727,3 +727,10 @@ Backpack & Coin Change (10%)
 - [ ] [coin-change](https://leetcode-cn.com/problems/coin-change/)
 - [ ] [backpack](https://www.lintcode.com/problem/backpack/description)
 - [ ] [backpack-ii](https://www.lintcode.com/problem/backpack-ii/description)
+
+Others
+- [ ] [maximum-product-subarray](https://leetcode-cn.com/problems/maximum-product-subarray/)
+- [ ] [decode-ways](https://leetcode-cn.com/problems/decode-ways/)
+- [ ] [best-time-to-buy-and-sell-stock-with-cooldown](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-with-cooldown/)
+- [ ] [word-break-ii](https://leetcode-cn.com/problems/word-break-ii/)
+- [ ] [burst-balloons](https://leetcode-cn.com/problems/burst-balloons/)
