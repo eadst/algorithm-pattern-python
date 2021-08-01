@@ -43,6 +43,15 @@ class Solution:
         return out
 ```
 
+```Python
+class Solution:
+    def singleNumber(self, nums: List[int]) -> int:
+        one = 0
+        for n in nums:
+            one ^= n
+        return one
+```
+
 ### [single-number-ii](https://leetcode-cn.com/problems/single-number-ii/)
 
 > 给定一个**非空**整数数组，除了某个元素只出现一次以外，其余每个元素均出现了三次。找出那个只出现了一次的元素。
@@ -58,6 +67,17 @@ class Solution:
 
         return seen_once
 ```
+
+```Python
+class Solution:
+    def singleNumber(self, nums: List[int]) -> int:
+        one, two = 0, 0
+        for n in nums:
+            one = one ^ n & ~two
+            two = two ^ n & ~one
+        return one
+```
+
 
 ### [single-number-iii](https://leetcode-cn.com/problems/single-number-iii/)
 
@@ -83,6 +103,21 @@ class Solution:
         return [x, bitmask^x]
 ```
 
+```Python
+class Solution:
+    def singleNumber(self, nums: List[int]) -> List[int]:
+        output = 0
+        for n in nums:
+            output ^= n
+        diff = output & (-output)
+        x = 0
+        for n in nums:
+            if diff & n:
+                x ^= n
+        return [x, x^output]
+```
+
+
 ### [number-of-1-bits](https://leetcode-cn.com/problems/number-of-1-bits/)
 
 > 编写一个函数，输入是一个无符号整数，返回其二进制表达式中数字位数为 ‘1’  的个数（也被称为[汉明重量](https://baike.baidu.com/item/%E6%B1%89%E6%98%8E%E9%87%8D%E9%87%8F)）。
@@ -96,6 +131,17 @@ class Solution:
             n &= n - 1
         return num_ones
 ```
+
+```Python
+class Solution:
+    def hammingWeight(self, n: int) -> int:
+        count = 0
+        while n:
+            count += 1
+            n &= n-1
+        return count
+```
+
 
 ### [counting-bits](https://leetcode-cn.com/problems/counting-bits/)
 
@@ -148,6 +194,16 @@ class Solution:
         return num_ones
 ```
 
+```Python
+class Solution:
+    def countBits(self, num: int) -> List[int]:
+        output = [0] * (num + 1)
+        for i in range(1, num+1):
+            output[i] = output[i&(i-1)] + 1
+        return output
+```
+
+
 ### [reverse-bits](https://leetcode-cn.com/problems/reverse-bits/)
 
 > 颠倒给定的 32 位无符号整数的二进制位。
@@ -172,6 +228,18 @@ class Solution:
         return (byte * 0x0202020202 & 0x010884422010) % 1023
 ```
 
+```Python
+class Solution:
+    def reverseBits(self, n: int) -> int:
+        output = 0
+        for i in range(32):
+            output <<= 1
+            output += n & 1
+            n >>= 1
+        return output
+```
+
+
 ### [bitwise-and-of-numbers-range](https://leetcode-cn.com/problems/bitwise-and-of-numbers-range/)
 
 > 给定范围 [m, n]，其中 0 <= m <= n <= 2147483647，返回此范围内所有数字的按位与（包含 m, n 两端点）。
@@ -189,6 +257,17 @@ class Solution:
             n >>= 1
         
         return m << shift
+```
+
+```Python
+class Solution:
+    def rangeBitwiseAnd(self, left: int, right: int) -> int:
+        shift = 0
+        while left < right:
+            left >>= 1
+            right >>= 1
+            shift += 1
+        return left << shift
 ```
 
 ## 练习
