@@ -40,6 +40,41 @@ class MinStack:
         return self.stack[-1][1]
 ```
 
+```Python
+class MinStack:
+
+    def __init__(self):
+        """
+        initialize your data structure here.
+        """
+        self.stack = []
+
+
+    def push(self, val: int) -> None:
+        if self.stack:
+            self.stack.append([val, min(val, self.stack[-1][1])])
+        else:
+            self.stack.append([val, val])
+
+    def pop(self) -> None:
+        self.stack.pop()[0]
+
+    def top(self) -> int:
+        return self.stack[-1][0]
+
+    def getMin(self) -> int:
+        return self.stack[-1][1]
+
+
+
+# Your MinStack object will be instantiated and called as such:
+# obj = MinStack()
+# obj.push(val)
+# obj.pop()
+# param_3 = obj.top()
+# param_4 = obj.getMin()
+```
+
 ### [evaluate-reverse-polish-notation](https://leetcode-cn.com/problems/evaluate-reverse-polish-notation/)
 
 > **波兰表达式计算** > **输入:** ["2", "1", "+", "3", "*"] > **输出:** 9
@@ -78,6 +113,24 @@ class Solution:
         return stack[0]
 ```
 
+```Python
+class Solution:
+    def evalRPN(self, tokens: List[str]) -> int:
+        stack = []
+        s = ["+", "-", "*", "/"]
+        for t in tokens:
+            if t == s[0]:
+                t = stack.pop(-2) + stack.pop()
+            elif t == s[1]:
+                t = stack.pop(-2) - stack.pop()
+            elif t == s[2]:
+                t = stack.pop(-2) * stack.pop()
+            elif t == s[3]:
+                t = stack.pop(-2) / stack.pop()
+            stack.append(int(t))
+        return stack[0]
+```
+
 ### [decode-string](https://leetcode-cn.com/problems/decode-string/)
 
 > 给定一个经过编码的字符串，返回它解码后的字符串。
@@ -111,6 +164,29 @@ class Solution:
         return stack_str[0]
 ```
 
+```Python
+class Solution:
+    def decodeString(self, s: str) -> str:
+        num = 0
+        output = ""
+        char_stack = [""]
+        num_stack = []
+        for i in s:
+            if i >= "0" and i <= "9":
+                num = num * 10 + int(i)
+            elif i == "[":
+                num_stack.append(num)
+                char_stack.append("")
+                num = 0
+            elif i == "]":
+                new = char_stack.pop() * num_stack.pop()
+                char_stack[-1] += new
+            else:
+                char_stack[-1] += i
+        return char_stack[0]
+```
+
+
 ### [binary-tree-inorder-traversal](https://leetcode-cn.com/problems/binary-tree-inorder-traversal/)
 
 > 给定一个二叉树，返回它的*中序*遍历。
@@ -135,6 +211,23 @@ class Solution:
         
         return inorder
 ```
+
+
+```Python
+class Solution:
+    def inorderTraversal(self, root: TreeNode) -> List[int]:
+        result = []
+        stack = []
+        while root or stack:
+            while root:
+                stack.append(root)
+                root = root.left
+            root = stack.pop()
+            result.append(root.val)
+            root = root.right
+        return result
+```
+
 
 ### [clone-graph](https://leetcode-cn.com/problems/clone-graph/)
 
@@ -194,6 +287,31 @@ class Solution:
         return visited[start]
 ```
 
+```Python
+"""
+# Definition for a Node.
+class Node:
+    def __init__(self, val = 0, neighbors = None):
+        self.val = val
+        self.neighbors = neighbors if neighbors is not None else []
+"""
+
+class Solution:
+    def cloneGraph(self, node: 'Node') -> 'Node':
+        if not node:
+            return None
+        deque = collections.deque([node])
+        output = {node: Node(node.val, [])}
+        while deque:
+            cur = deque.popleft()
+            for nb in cur.neighbors:
+                if nb not in output:
+                    output[nb] = Node(nb.val, [])
+                    deque.append(nb)
+                output[cur].neighbors.append(output[nb])
+        return output[node]
+```
+
 ### [number-of-islands](https://leetcode-cn.com/problems/number-of-islands/)
 
 > 给定一个由  '1'（陆地）和 '0'（水）组成的的二维网格，计算岛屿的数量。一个岛被水包围，并且它是通过水平方向或垂直方向上相邻的陆地连接而成的。你可以假设网格的四个边均被水包围。
@@ -236,6 +354,31 @@ class Solution:
                     dfs_iter(i, j)
         
         return num_island
+```
+
+```Python
+class Solution:
+    def numIslands(self, grid: List[List[str]]) -> int:
+        num = 0
+        m_len = len(grid)
+        n_len = len(grid[0])
+        lst = [-1, 0, 1, 0, -1]
+
+        def updateGrid(m, n):
+            if grid[m][n] == "1":
+                grid[m][n] = "0"
+                for i in range(len(lst)-1):
+                    new_m = m + lst[i]
+                    new_n = n + lst[i+1]
+                    if 0 <= new_m < m_len and 0 <= new_n < n_len:
+                        updateGrid(new_m, new_n)
+
+        for m in range(m_len):
+            for n in range(n_len):
+                if grid[m][n] == "1":
+                    num += 1
+                    updateGrid(m, n)
+        return num
 ```
 
 ### [largest-rectangle-in-histogram](https://leetcode-cn.com/problems/largest-rectangle-in-histogram/)
@@ -323,6 +466,21 @@ class Solution:
         return max_area
 ```
 
+```Python
+class Solution:
+    def largestRectangleArea(self, heights: List[int]) -> int:
+        heights.append(0)
+        output = 0
+        stack = [-1]
+        for i in range(len(heights)):
+            while len(stack) > 1 and heights[stack[-1]] > heights[i]:
+                h = stack.pop()
+                output = max(output, heights[h]*(i-stack[-1]-1))
+            stack.append(i)
+        return output
+```
+
+
 ## Queue 队列
 
 常用于 BFS 宽度优先搜索
@@ -370,6 +528,53 @@ class MyQueue:
         return len(self.cache) == 0 and len(self.out) == 0
 ```
 
+```Python
+class MyQueue:
+
+    def __init__(self):
+        """
+        Initialize your data structure here.
+        """
+        self.queue = collections.deque([])
+
+    def push(self, x: int) -> None:
+        """
+        Push element x to the back of queue.
+        """
+        self.queue.append(x)
+
+    def pop(self) -> int:
+        """
+        Removes the element from in front of queue and returns that element.
+        """
+        return self.queue.popleft()
+
+    def peek(self) -> int:
+        """
+        Get the front element.
+        """
+        return self.queue[0]
+
+    def empty(self) -> bool:
+        """
+        Returns whether the queue is empty.
+        """
+        if self.queue:
+            return False
+        else:
+            return True
+
+
+
+# Your MyQueue object will be instantiated and called as such:
+# obj = MyQueue()
+# obj.push(x)
+# param_2 = obj.pop()
+# param_3 = obj.peek()
+# param_4 = obj.empty()
+```
+
+
 ### [binary-tree-level-order-traversal](https://leetcode-cn.com/problems/binary-tree-level-order-traversal/)
 
 > 二叉树的层序遍历
@@ -399,6 +604,27 @@ class Solution:
         
         return levels
 ```
+
+```Python
+class Solution:
+    def levelOrder(self, root: TreeNode) -> List[List[int]]:
+        result = []
+        if not root:
+            return result
+        stack = collections.deque([root])
+        while stack:
+            length = len(stack)
+            result.append([])
+            for _ in range(length):
+                root = stack.popleft()
+                result[-1].append(root.val)
+                if root.left:
+                    stack.append(root.left)
+                if root.right:
+                    stack.append(root.right)
+        return result
+```
+
 
 ### [01-matrix](https://leetcode-cn.com/problems/01-matrix/)
 
@@ -471,6 +697,36 @@ class Solution:
         return dist
 ```
 
+```Python
+class Solution:
+    def updateMatrix(self, mat: List[List[int]]) -> List[List[int]]:
+        if len(mat) == 0 or len(mat[0]) == 0:
+            return mat
+        
+        m, n = len(mat), len(mat[0])
+        dist = [[float('inf')] * n for _ in range(m)]
+        
+        bfs = collections.deque([])
+        for i in range(m):
+            for j in range(n):
+                if mat[i][j] == 0:
+                    dist[i][j] = 0
+                    bfs.append((i, j))
+
+        neighbors = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+        while len(bfs) > 0:
+            i, j = bfs.popleft()
+            for dn_i, dn_j in neighbors:
+                n_i, n_j = i + dn_i, j + dn_j
+                if n_i >= 0 and n_i < m and n_j >= 0 and n_j < n:
+                    if dist[n_i][n_j] > dist[i][j] + 1:
+                        dist[n_i][n_j] = dist[i][j] + 1
+                        bfs.append((n_i, n_j))
+        
+        return dist
+```
+
+
 ## 补充：单调栈
 
 顾名思义，单调栈即是栈中元素有单调性的栈，典型应用为用线性的时间复杂度找左右两侧第一个大于/小于当前元素的位置。
@@ -491,6 +747,21 @@ class Solution:
         return result
 ```
 
+```Python
+class Solution:
+    def largestRectangleArea(self, heights: List[int]) -> int:
+        heights.append(0)
+        output = 0
+        stack = [-1]
+        for i in range(len(heights)):
+            while len(stack) > 1 and heights[stack[-1]] > heights[i]:
+                h = stack.pop()
+                output = max(output, heights[h]*(i-stack[-1]-1))
+            stack.append(i)
+        return output
+```
+
+
 ### [trapping-rain-water](https://leetcode-cn.com/problems/trapping-rain-water/)
 
 ```Python
@@ -510,6 +781,11 @@ class Solution:
         
         return result
 ```
+
+```Python
+
+```
+
 
 ## 补充：单调队列
 
@@ -549,6 +825,11 @@ class Solution:
         return result
 ```
 
+```Python
+
+```
+
+
 ### [shortest-subarray-with-sum-at-least-k](https://leetcode-cn.com/problems/shortest-subarray-with-sum-at-least-k/)
 
 ```Python
@@ -573,6 +854,10 @@ class Solution:
             minQ.append(i)
 
         return result if result < N + 1 else -1 
+```
+
+```Python
+
 ```
 
 ## 总结
