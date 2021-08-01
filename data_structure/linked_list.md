@@ -37,6 +37,22 @@ class Solution:
         return head
 ```
 
+```Python
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def deleteDuplicates(self, head: ListNode) -> ListNode:
+        start = head
+        while head:
+            while head.next and head.val == head.next.val:
+                head.next = head.next.next
+            head = head.next
+        return start
+```
+
 ### [remove-duplicates-from-sorted-list-ii](https://leetcode-cn.com/problems/remove-duplicates-from-sorted-list-ii/)
 
 > 给定一个排序链表，删除所有含有重复数字的节点，只保留原始链表中   没有重复出现的数字。
@@ -77,6 +93,25 @@ class Solution:
 • 删除用一个 Dummy Node 节点辅助（允许头节点可变）
 • 访问 X.next 、X.value 一定要保证 X != nil
 
+```Python
+class Solution:
+    def deleteDuplicates(self, head: ListNode) -> ListNode:
+        dummy = ListNode()
+        dummy.next = head
+        pre = dummy
+        while head:
+            cur = head.val
+            if head.next and cur == head.next.val:
+                while head.next and cur == head.next.val:
+                    head = head.next
+                head = head.next
+                pre.next = head
+            else:
+                pre = head
+                head = head.next
+        return dummy.next
+```
+
 ### [reverse-linked-list](https://leetcode-cn.com/problems/reverse-linked-list/)
 
 > 反转一个单链表。
@@ -115,6 +150,18 @@ class Solution:
         return rev_next
 ```
 
+```Python
+class Solution:
+    def reverseList(self, head: ListNode) -> ListNode:
+        pre = None
+        while head:
+            temp = head.next
+            head.next = pre
+            pre = head
+            head = temp
+        return pre
+```
+
 ### [reverse-linked-list-ii](https://leetcode-cn.com/problems/reverse-linked-list-ii/)
 
 > 反转从位置  *m*  到  *n*  的链表。请使用一趟扫描完成反转。
@@ -145,6 +192,32 @@ class Solution:
         return dummy.next
 ```
 
+```Python
+class Solution:
+    def reverseBetween(self, head: ListNode, left: int, right: int) -> ListNode:
+        if not head.next:
+            return head
+        dummy = ListNode()
+        dummy.next = head
+        pre = dummy
+        count = 1
+        while count < left:
+            pre = head
+            head = head.next
+            count += 1
+        cur = pre
+        start = head
+        while count <= right:
+            temp = head.next
+            head.next = cur
+            cur = head
+            head = temp
+            count += 1
+        pre.next = cur
+        start.next = head
+        return dummy.next
+```
+
 ### [merge-two-sorted-lists](https://leetcode-cn.com/problems/merge-two-sorted-lists/)
 
 > 将两个升序链表合并为一个新的升序链表并返回。新链表是通过拼接给定的两个链表的所有节点组成的。
@@ -170,6 +243,26 @@ class Solution:
         else:
             tail.next = l1
 
+        return dummy.next
+```
+
+```Python
+class Solution:
+    def mergeTwoLists(self, l1: ListNode, l2: ListNode) -> ListNode:
+        dummy = ListNode()
+        head = dummy
+        while l1 and l2:
+            if l1.val < l2.val:
+                head.next = l1
+                l1 = l1.next
+            else:
+                head.next = l2
+                l2 = l2.next
+            head = head.next
+        if l1:
+            head.next = l1
+        if l2:
+            head.next = l2
         return dummy.next
 ```
 
@@ -203,6 +296,25 @@ class Solution:
 哑巴节点使用场景
 
 > 当头节点不确定的时候，使用哑巴节点
+
+```Python
+class Solution:
+    def partition(self, head: ListNode, x: int) -> ListNode:
+        if not head or not head.next:
+            return head
+        s_head = s = ListNode(next=head)
+        l_head = l = ListNode()
+        while s.next:
+            if s.next.val < x:
+                s = s.next
+            else:
+                l.next = s.next
+                s.next = s.next.next
+                l = l.next
+        l.next = None
+        s.next = l_head.next
+        return s_head.next
+```
 
 ### [sort-list](https://leetcode-cn.com/problems/sort-list/)
 
@@ -257,6 +369,40 @@ class Solution:
 - 递归 mergeSort 需要断开中间节点
 - 递归返回条件为 head 为 nil 或者 head.Next 为 nil
 
+```Python
+class Solution:
+    def middle(self, head):
+        slow, fast = head, head.next
+        while fast and fast.next:
+            slow = slow.next
+            fast = fast.next.next
+        return slow  
+
+    def merge(self, l1, l2):
+        head = l = ListNode()
+        while l1 and l2:
+            if l1.val < l2.val:
+                l.next = l1
+                l1 = l1.next
+            else:
+                l.next = l2
+                l2 = l2.next
+            l = l.next
+        if l1:
+            l.next = l1
+        if l2:
+            l.next = l2           
+        return head.next
+
+    def sortList(self, head: ListNode) -> ListNode:
+        if not head or not head.next:
+            return head
+        mid = self.middle(head)
+        sec = mid.next
+        mid.next = None
+        return self.merge(self.sortList(head), self.sortList(sec))
+```
+
 ### [reorder-list](https://leetcode-cn.com/problems/reorder-list/)
 
 > 给定一个单链表  *L*：*L*→*L*→…→*L\_\_n*→*L*
@@ -303,6 +449,40 @@ class Solution:
         return
 ```
 
+```Python
+class Solution:
+    def reorderList(self, head: ListNode) -> None:
+        """
+        Do not return anything, modify head in-place instead.
+        """
+        if not head or not head.next:
+            return head
+
+        slow = l1 = head
+        fast = head.next
+        while fast and fast.next:
+            fast = fast.next.next
+            slow = slow.next
+        cur = slow.next
+        pre = None
+        slow.next = None
+
+        while cur:
+            temp = cur.next
+            cur.next = pre
+            pre = cur
+            cur = temp
+
+        while l1 and pre:
+            tpre = pre.next
+            pre.next = l1.next
+            l1.next = pre
+            l1 = l1.next.next
+            pre = tpre
+
+        return head
+```
+
 ### [linked-list-cycle](https://leetcode-cn.com/problems/linked-list-cycle/)
 
 > 给定一个链表，判断链表中是否有环。
@@ -323,6 +503,19 @@ class Solution:
             if fast == slow:
                 return True
         
+        return False
+```
+
+```Python
+class Solution:
+    def hasCycle(self, head: ListNode) -> bool:
+        slow = head
+        fast = head
+        while fast and fast.next:
+            fast = fast.next.next
+            slow = slow.next
+            if fast == slow:
+                return True
         return False
 ```
 
@@ -365,6 +558,22 @@ class Solution:
 - fast 如果初始化为 head.Next 则中点在 slow.Next
 - fast 初始化为 head,则中点在 slow
 
+```Python
+class Solution:
+    def detectCycle(self, head: ListNode) -> ListNode:
+        fast = slow = head
+        while fast and fast.next:
+            fast = fast.next.next
+            slow = slow.next
+            if fast == slow:
+                slow = head
+                while fast != slow:
+                    fast = fast.next
+                    slow = slow.next
+                return slow
+        return None
+```
+
 ### [palindrome-linked-list](https://leetcode-cn.com/problems/palindrome-linked-list/)
 
 > 请判断一个链表是否为回文链表。
@@ -390,6 +599,29 @@ class Solution:
                 return False
             slow = slow.next
             
+        return True
+```
+
+```Python
+class Solution:
+    def isPalindrome(self, head: ListNode) -> bool:
+        slow = head
+        fast = head
+        while fast and fast.next:
+            fast = fast.next.next
+            slow = slow.next
+        pre = None
+        while slow:
+            temp = slow.next
+            slow.next = pre
+            pre = slow
+            slow = temp
+        while pre:
+            if head.val == pre.val:
+                pre = pre.next
+                head = head.next
+            else:
+                return False
         return True
 ```
 
@@ -459,6 +691,25 @@ class Solution:
         o.next = None
         
         return new
+```
+
+```Python
+class Solution:
+    def copyRandomList(self, head: 'Node') -> 'Node':
+        if not head:
+            return None
+        copy = {}
+        m = n = head
+        while m:
+            copy[m] = Node(m.val)
+            m = m.next
+        while n:
+            if n.next:
+                copy[n].next = copy[n.next]
+            if n.random:
+                copy[n].random = copy[n.random]
+            n = n.next
+        return copy[head]
 ```
 
 ## 总结
