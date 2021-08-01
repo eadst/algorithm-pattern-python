@@ -67,6 +67,36 @@ class Solution:
         return preorder
 ```
 
+```Python
+class Solution:
+    def preorderTraversal(self, root: TreeNode) -> List[int]:
+        if not root:
+            return []
+        result = []
+        stock = []
+        while root or stock:
+            while root:
+                result.append(root.val)
+                stock.append(root)
+                root = root.left
+            root = stock.pop()
+            root = root.right
+        return result
+```
+
+```Python
+class Solution:
+    def preorderTraversal(self, root: TreeNode) -> List[int]:
+        result = []
+        def helper(root):
+            if root:
+                result.append(root.val)
+                helper(root.left)
+                helper(root.right)
+        helper(root)
+        return result
+```
+
 #### [中序非递归](https://leetcode-cn.com/problems/binary-tree-inorder-traversal/)
 
 ```Python
@@ -83,6 +113,28 @@ class Solution:
                 inorder.append(node.val)
                 node = node.right
         return inorder
+```
+
+```Python
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def inorderTraversal(self, root: TreeNode) -> List[int]:
+        result = []
+        stack = []
+        while root or stack:
+            while root:
+                stack.append(root)
+                root = root.left
+            root = stack.pop()
+            result.append(root.val)
+            root = root.right
+        return result
+
 ```
 
 #### [后序非递归](https://leetcode-cn.com/problems/binary-tree-postorder-traversal/)
@@ -108,6 +160,26 @@ class Solution:
         
         
         return postorder
+```
+
+```Python
+class Solution:
+    def postorderTraversal(self, root: TreeNode) -> List[int]:
+        result = []
+        stack = []
+        visit = None
+        while root or stack:
+            while root:
+                stack.append(root)
+                root = root.left
+            node = stack[-1]
+            if not node.right or node.right == visit:
+                result.append(node.val)
+                visit = node   
+                stack.pop()  
+            else:
+                root = node.right
+        return result
 ```
 
 注意点
@@ -159,6 +231,26 @@ class Solution:
                     bfs.append(node.right)
         
         return levels
+```
+
+```Python
+class Solution:
+    def levelOrder(self, root: TreeNode) -> List[List[int]]:
+        result = []
+        if not root:
+            return result
+        stack = collections.deque([root])
+        while stack:
+            length = len(stack)
+            result.append([])
+            for _ in range(length):
+                root = stack.popleft()
+                result[-1].append(root.val)
+                if root.left:
+                    stack.append(root.left)
+                if root.right:
+                    stack.append(root.right)
+        return result
 ```
 
 ### 分治法应用
@@ -220,6 +312,25 @@ class Solution:
         return depth
 ```
 
+```Python
+class Solution:
+    def maxDepth(self, root: TreeNode) -> int:
+        level = 0
+        if not root:
+            return level
+        stack = collections.deque([root])
+        while stack:
+            level += 1
+            length = len(stack)
+            for _ in range(length):
+                root = stack.popleft()
+                if root.left:
+                    stack.append(root.left)
+                if root.right:
+                    stack.append(root.right)
+        return level
+```
+
 ### [balanced-binary-tree](https://leetcode-cn.com/problems/balanced-binary-tree/)
 
 > 给定一个二叉树，判断它是否是高度平衡的二叉树。
@@ -278,6 +389,22 @@ class Solution:
         return True
 ```
 
+```Python
+class Solution:
+    def isBalanced(self, root: TreeNode) -> bool:
+        result = [True]
+        def helper(root):
+            if not root:
+                return 0
+            left = helper(root.left)
+            right = helper(root.right)
+            if abs(left-right) > 1:
+                result[-1] = False
+            return max(left, right) + 1
+        _ = helper(root)
+        return result[-1]
+```
+
 ### [binary-tree-maximum-path-sum](https://leetcode-cn.com/problems/binary-tree-maximum-path-sum/)
 
 > 给定一个**非空**二叉树，返回其最大路径和。
@@ -302,6 +429,22 @@ class Solution:
             return node.val + max(e_l, e_r, 0)
         
         largest_path_ends_at(root)
+        return self.maxPath
+```
+
+```Python
+class Solution:
+    def maxPathSum(self, root: TreeNode) -> int:
+        self.maxPath = float("-inf")
+        def helper(root):
+            if not root:
+                return float("-inf")
+            left = helper(root.left)
+            right = helper(root.right)
+            curPath = max(left, 0) + max(right, 0) + root.val
+            self.maxPath = max(self.maxPath, curPath, left, right)
+            return max(left, right, 0) + root.val
+        helper(root)
         return self.maxPath
 ```
 
@@ -332,6 +475,22 @@ class Solution:
             return right
         else:
             return None
+```
+
+```Python
+class Solution:
+    def lowestCommonAncestor(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -> 'TreeNode':
+        if root == p or root == q or not root:
+            return root
+        left = self.lowestCommonAncestor(root.left, p, q)
+        right = self.lowestCommonAncestor(root.right, p, q)
+        if left and right:
+            return root
+        if left:
+            return left
+        if right:
+            return right
+        return None
 ```
 
 ### BFS 层次应用
@@ -378,6 +537,33 @@ class Solution:
             
         
         return levels
+```
+
+```Python
+class Solution:
+    def zigzagLevelOrder(self, root: TreeNode) -> List[List[int]]:
+        result = []
+        if not root:
+            return result
+        order = 1
+        stack = collections.deque([root])
+        while stack:
+            length = len(stack)
+            temp = []
+            for _ in range(length):
+                root = stack.popleft()
+                temp.append(root.val)
+                if root.left:
+                    stack.append(root.left)
+                if root.right:
+                    stack.append(root.right)
+            if order:
+                result.append(temp)
+                order = 0
+            else:
+                result.append(temp[::-1])
+                order = 1
+        return result
 ```
 
 ### 二叉搜索树应用
@@ -440,6 +626,25 @@ class Solution:
         return True
 ```
 
+```Python
+class Solution:
+    def isValidBST(self, root: TreeNode) -> bool:
+        if not root:
+            return True
+        pre = float("-inf")
+        stack = []
+        while root or stack:
+            while root:
+                stack.append(root)
+                root = root.left
+            root = stack.pop()
+            if pre >= root.val:
+                return False
+            pre = root.val
+            root = root.right
+        return True
+```
+
 #### [insert-into-a-binary-search-tree](https://leetcode-cn.com/problems/insert-into-a-binary-search-tree/)
 
 > 给定二叉搜索树（BST）的根节点和要插入树中的值，将值插入二叉搜索树。 返回插入后二叉搜索树的根节点。
@@ -469,6 +674,26 @@ class Solution:
                     node = node.left
 ```
 
+```Python
+class Solution:
+    def insertIntoBST(self, root: TreeNode, val: int) -> TreeNode:
+        if not root:
+            return TreeNode(val)
+        node = root
+        while 1:
+            if val > root.val:
+                if root.right:
+                    root = root.right
+                else:
+                    root.right = TreeNode(val)
+                    return node
+            else:
+                if root.left:
+                    root = root.left
+                else:
+                    root.left = TreeNode(val)
+                    return node
+```
 ## 总结
 
 - 掌握二叉树递归与非递归遍历
