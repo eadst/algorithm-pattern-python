@@ -28,6 +28,18 @@ class Solution:
         return
 ```
 
+```Python
+class Solution:
+    def reverseString(self, s: List[str]) -> None:
+        """
+        Do not return anything, modify s in-place instead.
+        """
+        mid = len(s) // 2
+        for i in range(mid):
+            s[i], s[-i-1] = s[-i-1], s[i]
+        return s
+```
+
 ### [swap-nodes-in-pairs](https://leetcode-cn.com/problems/swap-nodes-in-pairs/)
 
 > 给定一个链表，两两交换其中相邻的节点，并返回交换后的链表。
@@ -44,6 +56,18 @@ class Solution:
             p.next = head
             head = p
         
+        return head
+```
+
+```Python
+class Solution:
+    def swapPairs(self, head: ListNode) -> ListNode:
+        if head and head.next:
+            next_pair = self.swapPairs(head.next.next)
+            temp = head.next
+            head.next = next_pair
+            temp.next = head
+            head = temp
         return head
 ```
 
@@ -76,6 +100,25 @@ class Solution:
         return generateTrees_rec(1, n) if n > 0 else []
 ```
 
+```Python
+class Solution:
+    def generateTrees(self, n: int) -> List[TreeNode]:
+        if not n:
+            return []
+        def helper(i, j):
+            if i > j:
+                return [None]
+            result = []
+            for m in range(i, j+1):
+                left = helper(i, m-1)
+                right = helper(m+1, j)
+                for l in left:
+                    for r in right:
+                        result.append(TreeNode(m, l, r))
+            return result
+        return helper(1, n)
+```
+
 ## 递归 + 备忘录 (recursion with memorization, top-down DP)
 
 ### [fibonacci-number](https://leetcode-cn.com/problems/fibonacci-number/)
@@ -99,6 +142,17 @@ class Solution:
             return mem[n]
         
         return fib_rec(N)
+```
+
+```Python
+class Solution:
+    def fib(self, n: int) -> int:
+        if not n:
+            return 0
+        first, second = 0, 1
+        for i in range(2, n+1):
+            first, second = second, first + second
+        return second
 ```
 
 ## 练习
