@@ -32,6 +32,25 @@ class Solution:
         return True
 ```
 
+```Python
+class Solution:
+    def isValidBST(self, root: TreeNode) -> bool:
+        if not root:
+            return True
+        pre = float("-inf")
+        stack = []
+        while root or stack:
+            while root:
+                stack.append(root)
+                root = root.left
+            root = stack.pop()
+            if pre >= root.val:
+                return False
+            pre = root.val
+            root = root.right
+        return True
+```
+
 ### [insert-into-a-binary-search-tree](https://leetcode-cn.com/problems/insert-into-a-binary-search-tree/)
 
 > 给定二叉搜索树（BST）的根节点和要插入树中的值，将值插入二叉搜索树。 返回插入后二叉搜索树的根节点。 保证原始二叉搜索树中不存在新值。
@@ -49,6 +68,27 @@ class Solution:
             root.left = self.insertIntoBST(root.left, val)
         
         return root
+```
+
+```Python
+class Solution:
+    def insertIntoBST(self, root: TreeNode, val: int) -> TreeNode:
+        if not root:
+            return TreeNode(val)
+        node = root
+        while 1:
+            if val > root.val:
+                if root.right:
+                    root = root.right
+                else:
+                    root.right = TreeNode(val)
+                    return node
+            else:
+                if root.left:
+                    root = root.left
+                else:
+                    root.left = TreeNode(val)
+                    return node
 ```
 
 ### [delete-node-in-a-bst](https://leetcode-cn.com/problems/delete-node-in-a-bst/)
@@ -97,6 +137,28 @@ class Solution:
         return dummy.left   
 ```
 
+```Python
+class Solution:
+    def deleteNode(self, root: TreeNode, key: int) -> TreeNode:
+        if not root:
+            return root
+        if key > root.val:
+            root.right = self.deleteNode(root.right, key)
+        elif key < root.val:
+            root.left = self.deleteNode(root.left, key)
+        elif key == root.val:
+            if not root.left:
+                return root.right
+            if not root.right:
+                return root.left
+            cur = root.right
+            while cur.left:
+                cur = cur.left
+            cur.left = root.left
+            return root.right
+        return root
+```
+
 ### [balanced-binary-tree](https://leetcode-cn.com/problems/balanced-binary-tree/)
 
 > 给定一个二叉树，判断它是否是高度平衡的二叉树。
@@ -132,6 +194,22 @@ class Solution:
                         s[-1][2] = d
         
         return True
+```
+
+```Python
+class Solution:
+    def isBalanced(self, root: TreeNode) -> bool:
+        result = [True]
+        def helper(root):
+            if not root:
+                return 0
+            left = helper(root.left)
+            right = helper(root.right)
+            if abs(left-right) > 1:
+                result[-1] = False
+            return max(left, right) + 1
+        _ = helper(root)
+        return result[-1]
 ```
 
 ### [valid-bfs-of-bst](./bst_bfs.py)
