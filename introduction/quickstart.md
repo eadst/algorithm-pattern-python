@@ -31,6 +31,16 @@ class Solution:
 - 循环时，i 不需要到 len-1
 - 如果找到目标字符串，len(needle) == j
 
+```Python
+    def strStr(self, haystack: str, needle: str) -> int:
+        len_needle = len(needle)
+        len_haystack = len(haystack)
+        for i in range(len_haystack-len_needle+1):
+            if haystack[i:i+len_needle] == needle:
+                return i
+        return -1
+```
+
 ### [示例 2：subsets](https://leetcode-cn.com/problems/subsets/)
 
 > 给定一组不含重复元素的整数数组 nums，返回该数组所有可能的子集（幂集）。
@@ -77,6 +87,24 @@ class Solution:
 ```
 
 说明：后面会深入讲解几个典型的回溯算法问题，如果当前不太了解可以暂时先跳过
+
+```Python
+class Solution:
+    def subsets(self, nums: List[int]) -> List[List[int]]:
+        if not nums:
+            return []
+        result = []
+        nums.sort()
+        def backtrack(lst, start):
+            result.append(lst)
+            for i in range(start, len(nums)):
+                number = nums[i]
+                if number not in lst:
+                    backtrack(lst + [number], i)
+        backtrack([], 0)
+        return result
+```
+
 
 ## 面试注意点
 
