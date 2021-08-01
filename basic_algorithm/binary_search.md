@@ -78,6 +78,26 @@ class Solution:
         return -1
 ```
 
+```Python
+class Solution:
+    def search(self, nums: List[int], target: int) -> int:
+        if not nums:
+            return -1
+        start = 0
+        end = len(nums) - 1
+        while start + 1 < end:
+            mid = (start + end) // 2
+            if nums[mid] < target:
+                start = mid
+            else:
+                end = mid
+        if nums[start] == target:
+            return start
+        if nums[end] == target:
+            return end
+        return -1
+```
+
 ## 常见题目
 
 ### [find-first-and-last-position-of-element-in-sorted-array](https://leetcode-cn.com/problems/find-first-and-last-position-of-element-in-sorted-array/)
@@ -158,6 +178,41 @@ class Solution:
         return Range
 ```
 
+```Python
+class Solution:
+    def searchRange(self, nums: List[int], target: int) -> List[int]:
+        result = [-1, -1]
+        if not nums:
+            return result
+        start = 0
+        end = len(nums) - 1
+        while start + 1 < end:
+            mid = (start + end) // 2
+            if nums[mid] < target:
+                start = mid
+            else:
+                end = mid
+        if nums[start] == target:
+            result[0] = start
+        elif nums[end] == target:
+            result[0] = end
+        else:
+            return result
+        start = 0
+        end = len(nums) - 1
+        while start + 1 < end:
+            mid = (start + end) // 2
+            if nums[mid] <= target:
+                start = mid
+            else:
+                end = mid
+        if nums[start] == target:
+            result[1] = start
+        if nums[end] == target:
+            result[1] = end
+        return result
+```
+
 ### [search-insert-position](https://leetcode-cn.com/problems/search-insert-position/)
 
 > 给定一个排序数组和一个目标值，在数组中找到目标值，并返回其索引。如果目标值不存在于数组中，返回它将会被按顺序插入的位置。
@@ -180,6 +235,28 @@ class Solution:
                 l = mid + 1
         
         return l
+```
+
+```Python
+class Solution:
+    def searchInsert(self, nums: List[int], target: int) -> int:
+        if not nums:
+            return 0
+        start = 0
+        end = len(nums) - 1
+        while start + 1 < end:
+            mid = (start + end) // 2
+            if nums[mid] < target:
+                start = mid
+            else:
+                end = mid
+        if target <= nums[start]:
+            return start
+        if target <= nums[end]:
+            return end
+        if target > nums[end]:
+            return end + 1
+        return 0
 ```
 
 ### [search-a-2d-matrix](https://leetcode-cn.com/problems/search-a-2d-matrix/)
@@ -224,6 +301,32 @@ class Solution:
         return False
 ```
 
+```Python
+class Solution:
+    def searchMatrix(self, matrix: List[List[int]], target: int) -> bool:
+        l, r = 0, len(matrix) - 1
+        while l <= r:
+            mid = l + (r - l) // 2
+            if matrix[mid][0] == target:
+                return True
+            elif matrix[mid][0] < target:
+                l = mid + 1
+            else:
+                r = mid - 1
+        row = r
+        l, r = 0, len(matrix[0]) - 1
+        while l <= r:
+            mid = l + (r - l) // 2
+            if matrix[row][mid] == target:
+                return True
+            elif matrix[row][mid] < target:
+                l = mid + 1
+            else:
+                r = mid - 1
+        
+        return False
+```
+
 ### [find-minimum-in-rotated-sorted-array](https://leetcode-cn.com/problems/find-minimum-in-rotated-sorted-array/)
 
 > 假设按照升序排序的数组在预先未知的某个点上进行了旋转，例如，数组 [0, 1, 2, 4, 5, 6, 7] 可能变为 [4, 5, 6, 7, 0, 1, 2]。请找出其中最小的元素。假设数组中无重复元素。
@@ -246,6 +349,23 @@ class Solution:
         return nums[l]
 ```
 
+```Python
+class Solution:
+    def findMin(self, nums: List[int]) -> int:
+        start = 0
+        end = len(nums) - 1
+        while start + 1 < end:
+            mid = (start + end) // 2
+            if nums[end] < nums[mid]:
+                start = mid
+            else:
+                end = mid
+        if nums[start] < nums[end]:
+            return nums[start]
+        else:
+            return nums[end]
+```
+
 ### [find-minimum-in-rotated-sorted-array-ii](https://leetcode-cn.com/problems/find-minimum-in-rotated-sorted-array-ii/)
 
 > 假设按照升序排序的数组在预先未知的某个点上进行了旋转，例如，数组 [0, 1, 2, 4, 5, 6, 7] 可能变为 [4, 5, 6, 7, 0, 1, 2]。请找出其中最小的元素。数组中可能包含重复元素。
@@ -266,6 +386,27 @@ class Solution:
                 l += 1
         
         return nums[l]
+```
+
+```Python
+class Solution:
+    def findMin(self, nums: List[int]) -> int:
+        start = 0
+        end = len(nums) - 1
+        while start + 1 < end:
+            while start < end and nums[end] == nums[end-1]:
+                end -= 1
+            while start < end and nums[start] == nums[start+1]:
+                start += 1
+            mid = (start + end) // 2
+            if nums[mid] >= nums[end]:
+                start = mid
+            else:
+                end = mid
+        if nums[start] < nums[end]:
+            return nums[start]
+        else:
+            return nums[end]
 ```
 
 ### [search-in-rotated-sorted-array](https://leetcode-cn.com/problems/search-in-rotated-sorted-array/)
@@ -292,6 +433,30 @@ class Solution:
                     r = mid - 1
                 else:
                     l = mid + 1
+        return -1
+```
+
+```Python
+class Solution:
+    def search(self, nums: List[int], target: int) -> int:
+        start = 0
+        end = len(nums) - 1
+        while start + 1 < end:
+            mid = (start + end) // 2
+            if nums[start] < nums[mid]:
+                if nums[start] <= target <= nums[mid]:
+                    end = mid
+                else:
+                    start = mid
+            else:
+                if nums[mid] <= target <= nums[end]:
+                    start = mid
+                else:
+                    end = mid
+        if nums[start] == target:
+            return start
+        if nums[end] == target:
+            return end
         return -1
 ```
 
@@ -326,6 +491,37 @@ class Solution:
         return False
 ```
 
+```Python
+class Solution:
+    def search(self, nums: List[int], target: int) -> bool:
+        start = 0
+        end = len(nums) - 1
+        while start + 1 < end:
+            while start < end and nums[end] == nums[end-1]:
+                end -= 1
+            while start < end and nums[start] == nums[start+1]:
+                start += 1
+            if end - start < 2:
+                break
+            middle = (start+end) // 2
+            if target == nums[middle]:
+                return True
+            if nums[start] < nums[middle]:
+                if nums[start] <= target < nums[middle]:
+                    end = middle
+                else:
+                    start = middle
+            else:
+                if nums[middle] < target <= nums[end]:
+                    start = middle
+                else:
+                    end = middle
+        if nums[start] == target or nums[end] == target:
+            return True
+        else:
+            return False
+```
+
 ## 隐含的二分搜索
 
 有时用到二分搜索的题目并不会直接给你一个有序数组，它隐含在题目中，需要你去发现或者构造。一类常见的隐含的二分搜索的问题是求某个有界数据的最值，以最小值为例，当数据比最小值大时都符合条件，比最小值小时都不符合条件，那么符合/不符合条件就构成了一种有序关系，再加上数据有界，我们就可以使用二分搜索来找数据的最小值。注意，数据的界一般也不会在题目中明确提示你，需要你自己去发现。
@@ -346,6 +542,23 @@ class Solution:
                 r = mid
         
         return l
+```
+
+```Python
+class Solution:
+    def minEatingSpeed(self, piles: List[int], h: int) -> int:
+        start = 1
+        end = max(piles)
+        while start < end:
+            mid = (start + end) // 2
+            time = 0
+            for p in piles:
+                time += (p + mid - 1) // mid
+            if time > h:
+                start = mid + 1
+            else:
+                end = mid
+        return start
 ```
 
 ## 总结
