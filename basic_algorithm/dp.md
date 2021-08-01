@@ -79,6 +79,23 @@ class Solution:
         return min(dp)
 ```
 
+```Python
+class Solution:
+    def minimumTotal(self, triangle: List[List[int]]) -> int:
+        result = triangle
+        count = 0
+        for line in result:
+            line[0] += count
+            count = line[0]
+        for i in range(1, len(triangle)):
+            for j in range(1, len(triangle[i])):
+                if j >= len(triangle[i-1]):
+                    result[i][j] += result[i-1][j-1]
+                else:
+                    result[i][j] += min(result[i-1][j-1], result[i-1][j])
+        return min(result[-1])
+```
+
 ## 递归和动规关系
 
 递归是一种程序的实现方式：函数的自我调用
@@ -162,6 +179,22 @@ class Solution:
         return dp[-1]
 ```
 
+```Python
+class Solution:
+    def minPathSum(self, grid: List[List[int]]) -> int:
+        m = len(grid)
+        n = len(grid[0])
+        result = grid
+        for i in range(1, m):
+            result[i][0] += result[i-1][0]
+        for j in range(1, n):
+            result[0][j] += result[0][j-1]
+        for i in range(1, m):
+            for j in range(1, n):
+                result[i][j] += min(result[i-1][j], result[i][j-1])
+        return result[-1][-1]
+```
+
 ### [unique-paths](https://leetcode-cn.com/problems/unique-paths/)
 
 > 一个机器人位于一个 m x n 网格的左上角 （起始点在下图中标记为“Start” ）。
@@ -182,6 +215,16 @@ class Solution:
                 dp[j] += dp[j - 1]
         
         return dp[-1]
+```
+
+```Python
+class Solution:
+    def uniquePaths(self, m: int, n: int) -> int:
+        result = [[1] * n for _ in range(m)]
+        for i in range(1, m):
+            for j in range(1, n):
+                result[i][j] = result[i-1][j] + result[i][j-1]
+        return result[-1][-1]
 ```
 
 ### [unique-paths-ii](https://leetcode-cn.com/problems/unique-paths-ii/)
@@ -210,6 +253,31 @@ class Solution:
         return dp[-1]
 ```
 
+```Python
+class Solution:
+    def uniquePathsWithObstacles(self, obstacleGrid: List[List[int]]) -> int:
+        if obstacleGrid[0][0]:
+            return 0
+        m = len(obstacleGrid)
+        n = len(obstacleGrid[0])
+        result = [[0] * n for _ in range(m)]
+        result[0][0] = 1
+        for i in range(1, m):
+            if not obstacleGrid[i][0]:
+                result[i][0] = result[i-1][0]
+        for j in range(1, n):
+            if not obstacleGrid[0][j]:
+                result[0][j] = result[0][j-1]
+
+        for i in range(1, m):
+            for j in range(1, n):
+                if obstacleGrid[i][j]:
+                    result[i][j] = 0
+                else:
+                    result[i][j] = result[i-1][j] + result[i][j-1]
+        return result[-1][-1]
+```
+
 ## 2、序列类型（40%）
 
 ### [climbing-stairs](https://leetcode-cn.com/problems/climbing-stairs/)
@@ -227,6 +295,18 @@ class Solution:
             step1, step2 = step1 + step2, step1
         
         return step1
+```
+
+```Python
+class Solution:
+    def climbStairs(self, n: int) -> int:
+        if n == 1:
+            return n
+        result = [1] * n
+        result[1] = 2
+        for i in range(2, n):
+            result[i] = result[i-1] + result[i-2]
+        return result[-1]
 ```
 
 ### [jump-game](https://leetcode-cn.com/problems/jump-game/)
@@ -265,6 +345,19 @@ class Solution:
         return True
 ```
 
+```Python
+class Solution:
+    def canJump(self, nums: List[int]) -> bool:
+        max_jump = 0
+        length = len(nums)
+        for i in range(length):
+            if max_jump >= i:
+                max_jump = max(max_jump, i + nums[i])
+            if max_jump >= length - 1:
+                return True
+        return False
+```
+
 ### [jump-game-ii](https://leetcode-cn.com/problems/jump-game-ii/)
 
 > 给定一个非负整数数组，你最初位于数组的第一个位置。
@@ -291,6 +384,18 @@ class Solution:
             cur_max = max(cur_max, i + nums[i]) # DP
         
         return min_step
+```
+
+```Python
+class Solution:
+    def jump(self, nums: List[int]) -> int:
+        max_jump, step, end = 0, 0, 0
+        for i in range(len(nums)-1):
+            max_jump = max(max_jump, i+nums[i])
+            if i == end:
+                step += 1
+                end = max_jump
+        return step
 ```
 
 ### [palindrome-partitioning-ii](https://leetcode-cn.com/problems/palindrome-partitioning-ii/)
@@ -328,6 +433,24 @@ class Solution:
             dp_min[j] = min_cut
         
         return dp_min[-1]
+```
+
+```Python
+class Solution:
+    def minCut(self, s: str) -> int:
+        n = len(s)
+        if n < 2:
+            return 0
+        result = [n] * n
+        result[0] = 0
+        for i in range(1, n):
+            if s[:i+1] == s[:i+1][::-1]:
+                result[i] = 0
+                continue
+            for j in range(i):
+                if s[j+1:i+1] == s[j+1:i+1][::-1]:
+                    result[i] = min(result[i], result[j]+1)
+        return result[-1]
 ```
 
 ### [longest-increasing-subsequence](https://leetcode-cn.com/problems/longest-increasing-subsequence/)
@@ -369,6 +492,23 @@ class Solution:
         return len(seq)
 ```
 
+```Python
+class Solution:
+    def lengthOfLIS(self, nums: List[int]) -> int:
+        result = [nums[0]]
+        length = len(nums)
+        for i in range(1, length):
+            if nums[i] > result[-1]:
+                result.append(nums[i])
+                continue
+            if nums[i] < result[-1]:
+                for j in range(len(result)):
+                    if nums[i] <= result[j]:
+                        result[j] = nums[i]
+                        break
+        return len(result)
+```
+
 ### [word-break](https://leetcode-cn.com/problems/word-break/)
 
 > 给定一个**非空**字符串  *s*  和一个包含**非空**单词列表的字典  *wordDict*，判定  *s*  是否可以被空格拆分为一个或多个在字典中出现的单词。
@@ -388,6 +528,22 @@ class Solution:
         
         return dp[len(s) - 1]
 
+```
+
+```Python
+class Solution:
+    def wordBreak(self, s: str, wordDict: List[str]) -> bool:
+        length = len(s)
+        result = [False] * length
+        for i in range(length):
+            if s[:i+1] in wordDict:
+                result[i] = True
+                continue
+            for j in range(i+1):
+                if result[j] and s[j+1:i+1] in wordDict:
+                    result[i] = True
+                    break
+        return result[-1]
 ```
 
 小结
@@ -437,6 +593,21 @@ class Solution:
         return dp[-1]
 ```
 
+```Python
+class Solution:
+    def longestCommonSubsequence(self, text1: str, text2: str) -> int:
+        m = len(text1) + 1
+        n = len(text2) + 1
+        result = [[0]*n for _ in range(m)]
+        for i in range(1, m):
+            for j in range(1, n):
+                if text1[i-1] == text2[j-1]:
+                    result[i][j] = result[i-1][j-1] + 1
+                else:
+                    result[i][j] = max(result[i-1][j], result[i][j-1])
+        return result[-1][-1]
+```
+
 ### [edit-distance](https://leetcode-cn.com/problems/edit-distance/)
 
 > 给你两个单词  word1 和  word2，请你计算出将  word1  转换成  word2 所使用的最少操作数  
@@ -476,6 +647,28 @@ class Solution:
         return dp[-1]
 ```
 
+```Python
+class Solution:
+    def minDistance(self, word1: str, word2: str) -> int:
+        m = len(word1)
+        n = len(word2)
+        if not m*n:
+            return m+n
+        m, n = m + 1, n + 1
+        result = [[0]*n for _ in range(m)]
+        for i in range(m):
+            result[i][0] = i
+        for j in range(n):
+            result[0][j] = j
+        for i in range(1, m):
+            for j in range(1, n):
+                if word1[i-1] == word2[j-1]:
+                    result[i][j] = result[i-1][j-1]
+                else:
+                    result[i][j] = min(result[i-1][j-1], result[i-1][j], result[i][j-1]) + 1
+        return result[-1][-1]
+```
+
 说明
 
 > 另外一种做法：MAXLEN(a,b)-LCS(a,b)
@@ -504,6 +697,19 @@ class Solution:
         return -1 if dp[amount] == float('inf') else dp[amount]
 ```
 
+```Python
+class Solution:
+    def coinChange(self, coins: List[int], amount: int) -> int:
+        result = [float("inf")] * (amount+1)
+        result[0] = 0
+        for i in range(1, amount+1):
+            for j in range(len(coins)):
+                if i >= coins[j]:
+                    result[i] = min(result[i], result[i-coins[j]]+1)
+        if result[-1] == float("inf"):
+            return -1
+        return result[-1]
+```
 
 ### [backpack](https://www.lintcode.com/problem/backpack/description)
 
@@ -526,6 +732,10 @@ class Solution:
             dp, dp_new = dp_new, dp
         
         return dp[-1]
+
+```
+
+```Python
 
 ```
 
@@ -553,6 +763,10 @@ class Solution:
             dp, dp_new = dp_new, dp
         
         return dp[-1]
+
+```
+
+```Python
 
 ```
 
@@ -588,6 +802,10 @@ class Solution:
         return max_product
 ```
 
+```Python
+
+```
+
 ### [decode-ways](https://leetcode-cn.com/problems/decode-ways/)
 
 > 1 到 26 分别对应 a 到 z，给定输入数字串，问总共有多少种译码方法
@@ -611,6 +829,10 @@ class Solution:
         return dp_1
 ```
 
+```Python
+
+```
+
 ### [best-time-to-buy-and-sell-stock-with-cooldown](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-with-cooldown/)
 
 > 给定股票每天的价格，每天可以买入卖出，买入后必须卖出才可以进行下一次购买，卖出后一天不可以购买，问可以获得的最大利润
@@ -627,6 +849,23 @@ class Solution:
             buy, buy_then_nothing, sell, sell_then_nothing = sell_then_nothing - p, max(buy, buy_then_nothing), max(buy, buy_then_nothing) + p, max(sell, sell_then_nothing)
         
         return max(buy, buy_then_nothing, sell, sell_then_nothing)
+```
+
+```Python
+class Solution:
+    def maxProfit(self, prices: List[int]) -> int:
+        n = len(prices)
+        if n < 2:
+            return 0
+        buy = [0] * n
+        sell = [0] * n
+        sell_s = [0] * n
+        buy[0] = -prices[0]
+        for i in range(1, n):
+            buy[i] = max(buy[i-1], sell[i-1] - prices[i])
+            sell_s[i] = buy[i-1] + prices[i]
+            sell[i] = max(sell_s[i-1], sell[i-1])
+        return max(sell[-1], sell_s[-1])
 ```
 
 ### [word-break-ii](https://leetcode-cn.com/problems/word-break-ii/)
@@ -671,6 +910,10 @@ class Solution:
         return result
 ```
 
+```Python
+
+```
+
 ### [burst-balloons](https://leetcode-cn.com/problems/burst-balloons/)
 
 > n 个气球排成一行，每个气球上有一个分数，每次戳爆一个气球得分为该气球分数和相邻两气球分数的乘积，求最大得分
@@ -695,6 +938,10 @@ class Solution:
                 dp[left][right] = max_coin
         nums.pop()
         return dp[-1][n]
+```
+
+```Python
+
 ```
 
 
