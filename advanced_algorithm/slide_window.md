@@ -131,6 +131,41 @@ class Solution:
         return False
 ```
 
+```Python
+class Solution:
+    def checkInclusion(self, s1: str, s2: str) -> bool:
+        target = collections.defaultdict(int)
+        
+        for c in s1:
+            target[c] += 1
+        
+        r, num_char = 0, len(target)
+
+        while r < len(s2):
+            if s2[r] in target:
+                l, count = r, 0
+                window = collections.defaultdict(int)
+                while r < len(s2):
+                    c = s2[r]
+                    if c not in target:
+                        break
+                    window[c] += 1
+                    if window[c] == target[c]:
+                        count += 1
+                        if count == num_char:
+                            return True
+                    while window[c] > target[c]:
+                        window[s2[l]] -= 1
+                        if window[s2[l]] == target[s2[l]] - 1:
+                            count -= 1
+                        l += 1
+                    r += 1
+            else:
+                r += 1
+        
+        return False
+```
+
 ### [find-all-anagrams-in-a-string](https://leetcode-cn.com/problems/find-all-anagrams-in-a-string/)
 
 > 给定一个字符串  **s **和一个非空字符串  **p**，找到  **s **中所有是  **p **的字母异位词的子串，返回这些子串的起始索引。
@@ -175,6 +210,40 @@ class Solution:
         return results
 ```
 
+```Python
+class Solution:
+    def findAnagrams(self, s: str, p: str) -> List[int]:
+        w_dict = {}
+        n_dict = {}
+        for p_s in p:
+            if p_s not in n_dict:
+                n_dict[p_s] = 1
+                w_dict[p_s] = 0
+            else:
+                n_dict[p_s] += 1
+        p_len = len(p)
+        s_len = len(s)
+        left = 0
+        right = 0
+        result = []
+        while (left+p_len-1) <= s_len and right <= (s_len-1):
+            new_s = s[right]
+            if not new_s in n_dict:
+                right += 1
+                for w_s in w_dict:
+                    w_dict[w_s] = 0
+                left = right
+            else:
+                w_dict[new_s] += 1
+                if (right-left+1) == p_len:
+                    if w_dict == n_dict:
+                        result.append(left)
+                    w_dict[s[left]] -= 1
+                    left += 1
+                right += 1
+        return result
+```
+
 ### [longest-substring-without-repeating-characters](https://leetcode-cn.com/problems/longest-substring-without-repeating-characters/)
 
 > 给定一个字符串，请你找出其中不含有重复字符的   最长子串   的长度。
@@ -198,6 +267,28 @@ class Solution:
             last_idx[c] = r
         
         return max(max_length, len(s) - l) # note that the last substring is not judged in the loop
+```
+
+```Python
+class Solution:
+    def lengthOfLongestSubstring(self, s: str) -> int:
+        windows = {}
+        length = len(s)
+        left, right = 0, 0
+        output = 0
+        while left < length and right < length:
+            if s[right] not in windows:
+                windows[s[right]] = 1
+            else:
+                windows[s[right]] += 1
+                while windows[s[right]] > 1:
+                    windows[s[left]] -= 1
+                    left += 1
+            current = sum(windows.values())
+            if current > output:
+                output = current
+            right += 1
+        return output
 ```
 
 ## 总结
