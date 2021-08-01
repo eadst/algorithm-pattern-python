@@ -55,6 +55,23 @@ class Solution:
         return result
 ```
 
+```Python
+class Solution:
+    def subsets(self, nums: List[int]) -> List[List[int]]:
+        if not nums:
+            return []
+        result = []
+        nums.sort()
+        def backtrack(lst, start):
+            result.append(lst)
+            for i in range(start, len(nums)):
+                number = nums[i]
+                if number not in lst:
+                    backtrack(lst + [number], i)
+        backtrack([], 0)
+        return result
+```
+
 ### [subsets-ii](https://leetcode-cn.com/problems/subsets-ii/)
 
 > 给定一个可能包含重复元素的整数数组 nums，返回该数组所有可能的子集（幂集）。说明：解集不能包含重复的子集。
@@ -85,6 +102,21 @@ class Solution:
         for k in range(n + 1):
             backtrack(0, k)
         
+        return result
+```
+
+```Python
+class Solution:
+    def subsetsWithDup(self, nums: List[int]) -> List[List[int]]:
+        result = []
+        length = len(nums)
+        nums.sort()
+        def helper(lst, start):
+            if lst not in result:
+                result.append(lst)
+                for i in range(start, length):
+                    helper(lst+[nums[i]], i+1)
+        helper([], 0)
         return result
 ```
 
@@ -145,6 +177,22 @@ class Solution:
         return result
 ```
 
+```Python
+class Solution:
+    def permute(self, nums: List[int]) -> List[List[int]]:
+        result = []
+        length = len(nums)
+        def helper(lst):
+            if lst not in result and len(lst) == length:
+                result.append(lst)
+            else:
+                for i in range(length):
+                    if nums[i] not in lst:
+                        helper(lst+[nums[i]])
+        helper([])
+        return result
+```
+
 ### [permutations-ii](https://leetcode-cn.com/problems/permutations-ii/)
 
 > 给定一个可包含重复数字的序列，返回所有不重复的全排列。
@@ -182,6 +230,21 @@ class Solution:
         return result
 ```
 
+```Python
+class Solution:
+    def permuteUnique(self, nums: List[int]) -> List[List[int]]:
+        result = []
+        length = len(nums)
+        def helper(lst, all_lst):
+            if len(lst) == length and lst not in result:
+                result.append(lst)
+            else:
+                for i in range(len(all_lst)):
+                    helper(lst+[all_lst[i]], all_lst[:i] + all_lst[i+1:])
+        helper([], nums)
+        return result
+```
+
 ### [combination-sum](https://leetcode-cn.com/problems/combination-sum/)
 
 ```Python
@@ -209,6 +272,21 @@ class Solution:
             return
         
         backtrack()
+        return result
+```
+
+```Python
+class Solution:
+    def combinationSum(self, candidates: List[int], target: int) -> List[List[int]]:
+        result = []
+        length = len(candidates)
+        def helper(start, lst, total):
+            if total == target:
+                result.append(lst)
+            elif total < target:
+                for i in range(start, length):
+                    helper(i, lst+[candidates[i]], total+candidates[i])
+        helper(0, [], 0)
         return result
 ```
 
@@ -248,6 +326,31 @@ class Solution:
             return
         
         backtrack()
+        return result
+```
+
+```Python
+class Solution:
+    def letterCombinations(self, digits: str) -> List[str]:
+        num2char = {
+            '2': ['a', 'b', 'c'],
+            '3': ['d', 'e', 'f'],
+            '4': ['g', 'h', 'i'],
+            '5': ['j', 'k', 'l'],
+            '6': ['m', 'n', 'o'],
+            '7': ['p', 'q', 'r', 's'],
+            '8': ['t', 'u', 'v'],
+            '9': ['w', 'x', 'y', 'z']
+        }
+        result = []
+        length = len(candidates)
+        def helper(start, lst, total):
+            if total == target:
+                result.append(lst)
+            elif total < target:
+                for i in range(start, length):
+                    helper(i, lst+[candidates[i]], total+candidates[i])
+        helper(0, "", 0)
         return result
 ```
 
@@ -322,7 +425,6 @@ class Solution:
         backtrack()
         return result
 ```
-
 
 
 ## 练习
