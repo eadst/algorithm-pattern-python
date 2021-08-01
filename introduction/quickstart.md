@@ -32,6 +32,7 @@ class Solution:
 - 如果找到目标字符串，len(needle) == j
 
 ```Python
+class Solution:
     def strStr(self, haystack: str, needle: str) -> int:
         len_needle = len(needle)
         len_haystack = len(haystack)
