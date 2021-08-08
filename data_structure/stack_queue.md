@@ -876,7 +876,22 @@ class Solution:
 ```
 
 ```Python
-
+class Solution:
+    def shortestSubarray(self, nums, k):
+        length = len(nums)
+        sum_list = [0]
+        for num in nums:
+            sum_list.append(sum_list[-1] + num)
+        result = length + 1
+        window = collections.deque()
+        for i, num_sum in enumerate(sum_list):
+            # remove num <= 0， [84,-37,32,40,95], 167
+            while window and num_sum <= sum_list[window[-1]]:
+                window.pop()
+            while window and num_sum - sum_list[window[0]] >= k:
+                result = min(result, i - window.popleft())
+            window.append(i)
+        return result if result < length + 1 else -1
 ```
 
 ## 总结
