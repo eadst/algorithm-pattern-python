@@ -826,7 +826,26 @@ class Solution:
 ```
 
 ```Python
-
+class Solution:
+    def maxSlidingWindow(self, nums: List[int], k: int) -> List[int]:
+        if k == 1:
+            return nums
+        result = []
+        # max index deque
+        max_index = collections.deque() 
+        length = len(nums)
+        for i in range(length):
+            # max left index < current left index
+            if max_index and max_index[0] == i - k: 
+                max_index.popleft()
+            # update new max num index
+            while max_index and nums[max_index[-1]] < nums[i]:
+                max_index.pop()
+            max_index.append(i)
+            # after k-1 index, record max number
+            if i >= k - 1:
+                result.append(nums[max_index[0]])
+        return result
 ```
 
 
