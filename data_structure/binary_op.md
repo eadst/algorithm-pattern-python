@@ -283,3 +283,4 @@ class Solution:
 ## 参考链接
 
 - [ ] [一篇读懂Python中的位运算](https://www.cnblogs.com/Neeo/articles/10536202.html) 
+- [ ] （https://leetcode-cn.com/problems/single-number-ii/solution/single-number-ii-mo-ni-san-jin-zhi-fa-by-jin407891/）
