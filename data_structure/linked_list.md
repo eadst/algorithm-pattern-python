@@ -96,15 +96,13 @@ class Solution:
 ```Python
 class Solution:
     def deleteDuplicates(self, head: ListNode) -> ListNode:
-        dummy = ListNode()
-        dummy.next = head
+        dummy = ListNode(0, head)
         pre = dummy
         while head:
             cur = head.val
             if head.next and cur == head.next.val:
-                while head.next and cur == head.next.val:
+                while head and cur == head.val:
                     head = head.next
-                head = head.next
                 pre.next = head
             else:
                 pre = head
