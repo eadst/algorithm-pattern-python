@@ -35,6 +35,27 @@ class Solution:
                 return edge
 ```
 
+```Python
+class Solution:
+    def findRedundantConnection(self, edges: List[List[int]]) -> List[int]:
+        parents = list(range(len(edges) + 1))
+
+        def find(index):
+            if parents[index] != index:
+                parents[index] = find(parents[index])
+            return parents[index]
+
+        def union(index1, index2):
+            parents[find(index1)] = find(index2)
+
+        for node1, node2 in edges:
+            if find(node1) != find(node2):
+                union(node1, node2)
+            else:
+                return [node1, node2]
+        return []
+```
+
 ### [accounts-merge](https://leetcode-cn.com/problems/accounts-merge/)
 
 ```Python
