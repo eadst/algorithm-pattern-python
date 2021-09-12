@@ -78,10 +78,13 @@
 
 3、 [剑指 offer](https://leetcode-cn.com/problemset/lcof/)
 
-[剑指offer题解](https://darktiantian.github.io/%E5%89%91%E6%8C%87Offer/)
 [剑指offer题解 Python 1](https://zhuanlan.zhihu.com/p/75864673)
+
 [剑指offer题解 Python 2](https://zhuanlan.zhihu.com/p/74641093)
+
 [剑指offer题解 Python 3](https://zhuanlan.zhihu.com/p/112990684)
+
+[剑指offer题解](https://darktiantian.github.io/%E5%89%91%E6%8C%87Offer/)
 
 ![剑指offer](https://img.fuiboom.com/img/leetcode_jzoffer.png)
 
