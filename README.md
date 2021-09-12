@@ -78,6 +78,8 @@
 
 3、 [剑指 offer](https://leetcode-cn.com/problemset/lcof/)
 
+[剑指 offer题解](https://darktiantian.github.io/%E5%89%91%E6%8C%87Offer/)
+
 ![剑指offer](https://img.fuiboom.com/img/leetcode_jzoffer.png)
 
 刷题时间可以合理分配，如果打算准备面试了，建议前面两部分 一个半月 （6 周）时间刷完，最后剑指 offer 半个月刷完，边刷可以边投简历进行面试，遇到不会的不用着急，往模板上套就对了，如果面试官给你提示，那就好好做，不要错过这大好机会~
