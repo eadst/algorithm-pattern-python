@@ -58,17 +58,13 @@ class Solution:
 ```Python
 class Solution:
     def subsets(self, nums: List[int]) -> List[List[int]]:
-        if not nums:
-            return []
         result = []
-        nums.sort()
-        def backtrack(lst, start):
-            result.append(lst)
+        def helper(start, subset):
+            result.append(subset)
             for i in range(start, len(nums)):
-                number = nums[i]
-                if number not in lst:
-                    backtrack(lst + [number], i)
-        backtrack([], 0)
+                if nums[i] not in subset:
+                    helper(i+1, subset+[nums[i]])
+        helper(0, [])
         return result
 ```
 
