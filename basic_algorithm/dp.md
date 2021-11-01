@@ -940,10 +940,168 @@ class Solution:
         return dp[-1][n]
 ```
 
-```Python
+### [best-time-to-buy-and-sell-stock](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock/)
+121. 买卖股票的最佳时机
+给定一个数组 prices ，它的第 i 个元素 prices[i] 表示一支给定股票第 i 天的价格。
 
+只能选择 某一天 买入这只股票，并选择在 未来的某一个不同的日子 卖出该股票。设计一个算法来计算你所能获取的最大利润。
+
+返回可以从这笔交易中获取的最大利润。如果你不能获取任何利润，返回 0 。
+
+```Python
+class Solution:
+    def maxProfit(self, prices: List[int]) -> int:
+        buy = float("inf")
+        sell = 0
+        for day in prices:
+            buy = min(buy, day)
+            sell = max(sell, day - buy)
+        return sell
 ```
 
+### [best-time-to-buy-and-sell-stock-ii](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-ii/)
+122. 买卖股票的最佳时机 II
+给定一个数组 prices ，其中 prices[i] 是一支给定股票第 i 天的价格。
+
+设计一个算法来计算你所能获取的最大利润。你可以尽可能地完成更多的交易（多次买卖一支股票）。
+
+注意：你不能同时参与多笔交易（你必须在再次购买前出售掉之前的股票）。
+
+```Python
+class Solution(object):
+    def maxProfit(self, prices):
+        """
+        :type prices: List[int]
+        :rtype: int
+        """
+        length = len(prices)
+        dp = [[0,0] for _ in range(length)]
+        dp[0][0] = 0
+        dp[0][1] = -prices[0]
+        for i in range(1, length):
+            dp[i][0] = max(dp[i-1][0],dp[i-1][1] + prices[i])
+            dp[i][1] = max(dp[i-1][0]-prices[i],dp[i-1][1])
+        return max(dp[-1][0],dp[-1][1])
+```
+
+```Python
+class Solution:
+    def maxProfit(self, prices: List[int]) -> int:
+        profit = 0
+        for i in range(1, len(prices)):
+            tmp = prices[i] - prices[i - 1]
+            if tmp > 0: profit += tmp
+        return profit
+```
+
+
+### [best-time-to-buy-and-sell-stock-iii](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-iii/)
+
+123. 买卖股票的最佳时机 III
+给定一个数组，它的第 i 个元素是一支给定的股票在第 i 天的价格。
+
+设计一个算法来计算你所能获取的最大利润。你最多可以完成 两笔 交易。
+
+注意：你不能同时参与多笔交易（你必须在再次购买前出售掉之前的股票）。
+
+
+```Python
+class Solution:
+    def maxProfit(self, prices: List[int]) -> int:
+        n = len(prices)
+        buy1 = buy2 = -prices[0]
+        sell1 = sell2 = 0
+        for i in range(1, n):
+            buy1 = max(buy1, -prices[i])
+            sell1 = max(sell1, buy1 + prices[i])
+            buy2 = max(buy2, sell1 - prices[i])
+            sell2 = max(sell2, buy2 + prices[i])
+        return sell2
+```
+
+
+### [best-time-to-buy-and-sell-stock-iv](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-iv/)
+
+188. 买卖股票的最佳时机 IV
+给定一个整数数组 prices ，它的第 i 个元素 prices[i] 是一支给定的股票在第 i 天的价格。
+
+设计一个算法来计算你所能获取的最大利润。你最多可以完成 k 笔交易。
+
+注意：你不能同时参与多笔交易（你必须在再次购买前出售掉之前的股票）。
+
+
+```Python
+class Solution:
+    def maxProfit(self, k: int, prices: List[int]) -> int:
+        days = len(prices)
+        profit = 0
+        if days < 2:
+            return profit
+        if k >= days:
+            for day in range(1, days):
+                if prices[day] > prices[day-1]:
+                    profit += (prices[day] - prices[day-1])
+            return profit
+        buy = [float("-inf")]* (k+1)
+        sell = [0]* (k+1)
+        for i in range(days):
+            for j in range(1, k+1):
+                buy[j] = max(buy[j], sell[j-1]-prices[i])
+                sell[j] = max(sell[j], buy[j]+prices[i])
+        return sell[-1]
+```
+
+
+### [best-time-to-buy-and-sell-stock-with-transaction-fee](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-with-transaction-fee/)
+
+给定一个整数数组 prices，其中第 i 个元素代表了第 i 天的股票价格 ；整数 fee 代表了交易股票的手续费用。
+
+你可以无限次地完成交易，但是你每笔交易都需要付手续费。如果你已经购买了一个股票，在卖出它之前你就不能再继续购买股票了。
+
+返回获得利润的最大值。
+
+注意：这里的一笔交易指买入持有并卖出股票的整个过程，每笔交易你只需要为支付一次手续费。
+
+
+```Python
+class Solution:
+    def maxProfit(self, prices: List[int], fee: int) -> int:
+        n = len(prices)
+        dp = [[0, -prices[0]]] + [[0, 0] for _ in range(n - 1)]
+        for i in range(1, n):
+            dp[i][0] = max(dp[i - 1][0], dp[i - 1][1] + prices[i] - fee)
+            dp[i][1] = max(dp[i - 1][1], dp[i - 1][0] - prices[i])
+        return dp[n - 1][0]
+```
+
+
+### [best-time-to-buy-and-sell-stock-with-transaction-fee](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-with-cooldown/)
+
+309. 最佳买卖股票时机含冷冻期
+给定一个整数数组，其中第 i 个元素代表了第 i 天的股票价格 。​
+
+设计一个算法计算出最大利润。在满足以下约束条件下，你可以尽可能地完成更多的交易（多次买卖一支股票）:
+
+你不能同时参与多笔交易（你必须在再次购买前出售掉之前的股票）。
+卖出股票后，你无法在第二天买入股票 (即冷冻期为 1 天)。
+
+
+```Python
+class Solution:
+    def maxProfit(self, prices: List[int]) -> int:
+        n = len(prices)
+        if n < 2:
+            return 0
+        buy = [0] * n
+        sell = [0] * n
+        sell_s = [0] * n
+        buy[0] = -prices[0]
+        for i in range(1, n):
+            buy[i] = max(buy[i-1], sell[i-1] - prices[i])
+            sell_s[i] = buy[i-1] + prices[i]
+            sell[i] = max(sell_s[i-1], sell[i-1])
+        return max(sell[-1], sell_s[-1])
+```
 
 
 ## 练习
