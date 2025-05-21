@@ -32,6 +32,29 @@ b = tmp
 a, b = b, a
 ```
 
+#### 定义
+
+```Python
+ninf = float("-inf")
+pinf = float("inf")
+```
+
+#### 翻转
+```Python
+lst = [1, 2, 3, 4, 5]
+reversed_lst = lst[::-1]
+print(reversed_lst)  # 输出：[5, 4, 3, 2, 1]
+
+lst = [1, 2, 3]
+lst.reverse()
+print(lst)  # 输出: [3, 2, 1]
+
+lst = [1, 2, 3]
+rev = reversed(lst)
+print(list(rev))  # 输出: [3, 2, 1]
+print(lst)        # 原列表未变: [1, 2, 3]
+```
+
 #### 连续不等式或等式
 
 ```Python
